@@ -7,7 +7,12 @@ const YOUTUBE_URL   = 'https://www.youtube.com/watch?v=_mazCHSfXfQ';
 
 export async function POST(req: NextRequest) {
   try {
-    const { nom, prenom, email, telephone, classe, pays } = await req.json();
+    const { nom, prenom, email, telephone: rawTelephone, classe, pays } = await req.json();
+    // Normalise en E.164 : supprime espaces/tirets, retire le 0 initial après l'indicatif
+    // Ex: "+33 07 59 48 30 24" → "+33759483024"
+    const telephone = rawTelephone
+      ? rawTelephone.replace(/\s+|-/g, '').replace(/^(\+\d+)0(\d)/, '$1$2')
+      : '';
 
     if (!nom || !prenom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ success: false, message: 'Nom, prénom ou email invalide.' }, { status: 400 });
