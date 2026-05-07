@@ -8,7 +8,13 @@ const YOUTUBE_URL   = 'https://www.youtube.com/watch?v=_mazCHSfXfQ';
 export async function POST(req: NextRequest) {
   try {
     const { nom, prenom, email, telephone: rawTelephone, classe, pays } = await req.json();
-    const telephone = rawTelephone ? String(rawTelephone).trim() : '';
+    // rawTelephone = "+33 07 59 48 30 24" — on extrait l'indicatif et le numéro local séparément
+    const rawPhone = rawTelephone ? String(rawTelephone).trim() : '';
+    const dialMatch = rawPhone.match(/^(\+\d+)\s*(.*)$/);
+    const smsCountryCode = dialMatch ? dialMatch[1] : '';
+    const smsLocal = dialMatch
+      ? dialMatch[2].replace(/\s+|-/g, '').replace(/^0/, '') // retire espaces et le 0 initial
+      : rawPhone.replace(/\s+|-/g, '');
 
     if (!nom || !prenom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ success: false, message: 'Nom, prénom ou email invalide.' }, { status: 400 });
@@ -72,9 +78,10 @@ export async function POST(req: NextRequest) {
       attributes: {
         PRENOM: prenom,
         NOM:    nom,
-        ...(telephone ? { TELEPHONE: telephone } : {}),
-        ...(classe    ? { CLASSE:    classe    } : {}),
-        ...(pays      ? { PAYS:      pays      } : {}),
+        ...(smsLocal       ? { SMS:              smsLocal      } : {}),
+        ...(smsCountryCode ? { SMS_COUNTRY_CODE: smsCountryCode } : {}),
+        ...(classe         ? { CLASSE:           classe        } : {}),
+        ...(pays           ? { PAYS:             pays          } : {}),
       },
       updateEnabled: true,
     };
