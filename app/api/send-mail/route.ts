@@ -72,18 +72,7 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`;
 
-    // 1. Ajouter le contact à la liste Brevo
-    const contactPayload = {
-      email,
-      attributes: {
-        PRENOM: prenom,
-        NOM:    nom,
-        ...(sms    ? { SMS:    sms    } : {}),
-        ...(classe         ? { CLASSE:           classe        } : {}),
-        ...(pays           ? { PAYS:             pays          } : {}),
-      },
-      updateEnabled: true,
-    };
+    // 1. Ajouter le contact à la liste Brevo (sans SMS pour éviter un 400 si format rejeté)
     const contactRes = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
@@ -91,11 +80,37 @@ export async function POST(req: NextRequest) {
         'api-key': BREVO_API_KEY,
         'content-type': 'application/json',
       },
-      body: JSON.stringify(contactPayload),
+      body: JSON.stringify({
+        email,
+        attributes: {
+          PRENOM: prenom,
+          NOM:    nom,
+          ...(classe ? { CLASSE: classe } : {}),
+          ...(pays   ? { PAYS:   pays   } : {}),
+        },
+        updateEnabled: true,
+      }),
     });
     if (!contactRes.ok) {
       const contactErr = await contactRes.json().catch(() => ({}));
       console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
+    }
+
+    // 1b. Mettre à jour le SMS séparément (un 400 sur le numéro ne bloque pas la création du contact)
+    if (sms) {
+      const smsRes = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        method: 'PUT',
+        headers: {
+          'accept': 'application/json',
+          'api-key': BREVO_API_KEY,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ attributes: { SMS: sms } }),
+      });
+      if (!smsRes.ok) {
+        const smsErr = await smsRes.json().catch(() => ({}));
+        console.error('[Brevo SMS] status:', smsRes.status, 'body:', JSON.stringify(smsErr));
+      }
     }
 
     // 2. Envoyer l'email de bienvenue avec le lien YouTube
