@@ -135,6 +135,8 @@ export function LeadPopup() {
     const fullPhone = telephone.trim() ? `${country.dial} ${telephone.trim()}` : '';
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
       const res = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -142,7 +144,9 @@ export function LeadPopup() {
           nom: trimmedNom, prenom: trimmedPrenom, email: trimmedEmail,
           telephone: fullPhone, classe, pays: country.name,
         }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
 
       const data = await res.json().catch(() => ({})) as { success?: boolean; message?: string };
       if (!res.ok || !data.success) throw new Error(data.message ?? `Erreur ${res.status}`);
@@ -152,7 +156,8 @@ export function LeadPopup() {
       closeTimerRef.current = setTimeout(() => setIsOpen(false), 3500);
     } catch (err) {
       setStatus('error');
-      setErrorMessage(err instanceof Error ? err.message : 'Une erreur est survenue. Réessaie.');
+      const isTimeout = err instanceof Error && err.name === 'AbortError';
+      setErrorMessage(isTimeout ? 'La requête a pris trop de temps. Réessaie.' : (err instanceof Error ? err.message : 'Une erreur est survenue. Réessaie.'));
     }
   }
 
