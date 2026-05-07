@@ -9,11 +9,11 @@ export async function POST(req: NextRequest) {
   try {
     const { nom, prenom, email, telephone: rawTelephone, classe, pays } = await req.json();
     // rawTelephone = "+33 07 59 48 30 24" — on extrait l'indicatif et le numéro local séparément
+    // Normalise en E.164 : "+33 07 59 48 30 24" → "+33759483024"
     const rawPhone = rawTelephone ? String(rawTelephone).trim() : '';
     const dialMatch = rawPhone.match(/^(\+\d+)\s*(.*)$/);
-    const smsCountryCode = dialMatch ? dialMatch[1] : '';
-    const smsLocal = dialMatch
-      ? dialMatch[2].replace(/\s+|-/g, '').replace(/^0/, '') // retire espaces et le 0 initial
+    const sms = dialMatch
+      ? dialMatch[1] + dialMatch[2].replace(/\s+|-/g, '').replace(/^0/, '')
       : rawPhone.replace(/\s+|-/g, '');
 
     if (!nom || !prenom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -78,8 +78,7 @@ export async function POST(req: NextRequest) {
       attributes: {
         PRENOM: prenom,
         NOM:    nom,
-        ...(smsLocal       ? { SMS:              smsLocal      } : {}),
-        ...(smsCountryCode ? { SMS_COUNTRY_CODE: smsCountryCode } : {}),
+        ...(sms    ? { SMS:    sms    } : {}),
         ...(classe         ? { CLASSE:           classe        } : {}),
         ...(pays           ? { PAYS:             pays          } : {}),
       },
