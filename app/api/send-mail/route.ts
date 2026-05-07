@@ -93,30 +93,35 @@ export async function POST(req: NextRequest) {
       }),
     });
     if (!contactRes.ok) {
-      const contactErr = await contactRes.json().catch(() => ({}));
-      console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
-      // Retry sans SMS si le numéro cause un 400
-      const retryRes = await fetch('https://api.brevo.com/v3/contacts', {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-          'api-key': BREVO_API_KEY,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          attributes: {
-            PRENOM: prenom,
-            NOM:    nom,
-            ...(classe ? { CLASSE: classe } : {}),
-            ...(pays   ? { PAYS:   pays   } : {}),
+      const contactErr = await contactRes.json().catch(() => ({}) as { code?: string });
+      // duplicate_parameter = numéro déjà utilisé par un autre contact : retry sans SMS
+      const isDuplicateSms = (contactErr as { code?: string }).code === 'duplicate_parameter';
+      if (!isDuplicateSms) {
+        console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
+      }
+      if (isDuplicateSms || sms) {
+        const retryRes = await fetch('https://api.brevo.com/v3/contacts', {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'api-key': BREVO_API_KEY,
+            'content-type': 'application/json',
           },
-          updateEnabled: true,
-        }),
-      });
-      if (!retryRes.ok) {
-        const retryErr = await retryRes.json().catch(() => ({}));
-        console.error('[Brevo contacts retry] status:', retryRes.status, 'body:', JSON.stringify(retryErr));
+          body: JSON.stringify({
+            email,
+            attributes: {
+              PRENOM: prenom,
+              NOM:    nom,
+              ...(classe ? { CLASSE: classe } : {}),
+              ...(pays   ? { PAYS:   pays   } : {}),
+            },
+            updateEnabled: true,
+          }),
+        });
+        if (!retryRes.ok) {
+          const retryErr = await retryRes.json().catch(() => ({}));
+          console.error('[Brevo contacts retry] status:', retryRes.status, 'body:', JSON.stringify(retryErr));
+        }
       }
     }
 
