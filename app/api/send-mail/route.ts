@@ -66,25 +66,43 @@ export async function POST(req: NextRequest) {
 </html>`;
 
     // 1. Ajouter le contact à la liste Brevo
-    await fetch('https://api.brevo.com/v3/contacts', {
+    const contactPayload = {
+      email,
+      attributes: {
+        PRENOM: prenom,
+        NOM:    nom,
+        ...(telephone ? { SMS: telephone } : {}),
+        ...(classe    ? { CLASSE: classe } : {}),
+      },
+      updateEnabled: true,
+    };
+    const contactRes = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
         'api-key': BREVO_API_KEY,
         'content-type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        attributes: {
-          PRENOM:    prenom,
-          NOM:       nom,
-          SMS:       telephone,
-          CLASSE:    classe,
-        },
-        updateEnabled: true, // met à jour si le contact existe déjà
-      }),
+      body: JSON.stringify(contactPayload),
     });
-    // On ignore l'erreur contact (ex: déjà existant) pour ne pas bloquer l'envoi de l'email
+    if (!contactRes.ok) {
+      const contactErr = await contactRes.json().catch(() => ({}));
+      console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
+      // Retry sans les attributs custom (SMS/CLASSE peuvent ne pas exister dans ce compte Brevo)
+      const retryRes = await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': BREVO_API_KEY,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ email, attributes: { PRENOM: prenom, NOM: nom }, updateEnabled: true }),
+      });
+      if (!retryRes.ok) {
+        const retryErr = await retryRes.json().catch(() => ({}));
+        console.error('[Brevo contacts retry] status:', retryRes.status, 'body:', JSON.stringify(retryErr));
+      }
+    }
 
     // 2. Envoyer l'email de bienvenue avec le lien YouTube
     const res = await fetch('https://api.brevo.com/v3/smtp/email', {
