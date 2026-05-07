@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`;
 
-    // 1. Ajouter le contact à la liste Brevo (sans SMS pour éviter un 400 si format rejeté)
+    // 1. Créer/mettre à jour le contact (SMS inclus dans le même appel)
     const contactRes = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
@@ -85,6 +85,7 @@ export async function POST(req: NextRequest) {
         attributes: {
           PRENOM: prenom,
           NOM:    nom,
+          ...(sms    ? { SMS:    sms    } : {}),
           ...(classe ? { CLASSE: classe } : {}),
           ...(pays   ? { PAYS:   pays   } : {}),
         },
@@ -94,22 +95,28 @@ export async function POST(req: NextRequest) {
     if (!contactRes.ok) {
       const contactErr = await contactRes.json().catch(() => ({}));
       console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
-    }
-
-    // 1b. Mettre à jour le SMS séparément (un 400 sur le numéro ne bloque pas la création du contact)
-    if (sms) {
-      const smsRes = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-        method: 'PUT',
+      // Retry sans SMS si le numéro cause un 400
+      const retryRes = await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
         headers: {
           'accept': 'application/json',
           'api-key': BREVO_API_KEY,
           'content-type': 'application/json',
         },
-        body: JSON.stringify({ attributes: { SMS: sms } }),
+        body: JSON.stringify({
+          email,
+          attributes: {
+            PRENOM: prenom,
+            NOM:    nom,
+            ...(classe ? { CLASSE: classe } : {}),
+            ...(pays   ? { PAYS:   pays   } : {}),
+          },
+          updateEnabled: true,
+        }),
       });
-      if (!smsRes.ok) {
-        const smsErr = await smsRes.json().catch(() => ({}));
-        console.error('[Brevo SMS] status:', smsRes.status, 'body:', JSON.stringify(smsErr));
+      if (!retryRes.ok) {
+        const retryErr = await retryRes.json().catch(() => ({}));
+        console.error('[Brevo contacts retry] status:', retryRes.status, 'body:', JSON.stringify(retryErr));
       }
     }
 
