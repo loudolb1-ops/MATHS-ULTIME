@@ -140,7 +140,7 @@ export function LeadPopup() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nom: trimmedNom, prenom: trimmedPrenom, email: trimmedEmail,
-          telephone: fullPhone, classe,
+          telephone: fullPhone, classe, pays: country.name,
         }),
       });
 

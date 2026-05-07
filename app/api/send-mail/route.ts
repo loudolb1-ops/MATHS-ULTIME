@@ -7,7 +7,7 @@ const YOUTUBE_URL   = 'https://www.youtube.com/watch?v=_mazCHSfXfQ';
 
 export async function POST(req: NextRequest) {
   try {
-    const { nom, prenom, email, telephone, classe } = await req.json();
+    const { nom, prenom, email, telephone, classe, pays } = await req.json();
 
     if (!nom || !prenom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ success: false, message: 'Nom, prénom ou email invalide.' }, { status: 400 });
@@ -71,8 +71,9 @@ export async function POST(req: NextRequest) {
       attributes: {
         PRENOM: prenom,
         NOM:    nom,
-        ...(telephone ? { SMS: telephone } : {}),
-        ...(classe    ? { CLASSE: classe } : {}),
+        ...(telephone ? { SMS:    telephone } : {}),
+        ...(classe    ? { CLASSE: classe    } : {}),
+        ...(pays      ? { PAYS:   pays      } : {}),
       },
       updateEnabled: true,
     };
