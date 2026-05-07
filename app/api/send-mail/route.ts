@@ -8,11 +8,7 @@ const YOUTUBE_URL   = 'https://www.youtube.com/watch?v=_mazCHSfXfQ';
 export async function POST(req: NextRequest) {
   try {
     const { nom, prenom, email, telephone: rawTelephone, classe, pays } = await req.json();
-    // Normalise en E.164 : supprime espaces/tirets, retire le 0 initial après l'indicatif
-    // Ex: "+33 07 59 48 30 24" → "+33759483024"
-    const telephone = rawTelephone
-      ? rawTelephone.replace(/\s+|-/g, '').replace(/^(\+\d+)0(\d)/, '$1$2')
-      : '';
+    const telephone = rawTelephone ? String(rawTelephone).trim() : '';
 
     if (!nom || !prenom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ success: false, message: 'Nom, prénom ou email invalide.' }, { status: 400 });
@@ -76,9 +72,9 @@ export async function POST(req: NextRequest) {
       attributes: {
         PRENOM: prenom,
         NOM:    nom,
-        ...(telephone ? { SMS:    telephone } : {}),
-        ...(classe    ? { CLASSE: classe    } : {}),
-        ...(pays      ? { PAYS:   pays      } : {}),
+        ...(telephone ? { TELEPHONE: telephone } : {}),
+        ...(classe    ? { CLASSE:    classe    } : {}),
+        ...(pays      ? { PAYS:      pays      } : {}),
       },
       updateEnabled: true,
     };
@@ -94,20 +90,6 @@ export async function POST(req: NextRequest) {
     if (!contactRes.ok) {
       const contactErr = await contactRes.json().catch(() => ({}));
       console.error('[Brevo contacts] status:', contactRes.status, 'body:', JSON.stringify(contactErr));
-      // Retry sans les attributs custom (SMS/CLASSE peuvent ne pas exister dans ce compte Brevo)
-      const retryRes = await fetch('https://api.brevo.com/v3/contacts', {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-          'api-key': BREVO_API_KEY,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ email, attributes: { PRENOM: prenom, NOM: nom }, updateEnabled: true }),
-      });
-      if (!retryRes.ok) {
-        const retryErr = await retryRes.json().catch(() => ({}));
-        console.error('[Brevo contacts retry] status:', retryRes.status, 'body:', JSON.stringify(retryErr));
-      }
     }
 
     // 2. Envoyer l'email de bienvenue avec le lien YouTube
