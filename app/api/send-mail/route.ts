@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL  = 'chadsciences@maths-ultime.fr';
 const SENDER_NAME   = 'Maths Ultime';
-const YOUTUBE_URL   = 'https://www.youtube.com/watch?v=_mazCHSfXfQ';
+const VIDEO_URL = 'https://player.mediadelivery.net/embed/651267/5d0d7e5b-edb5-444f-b257-a2bd59c2a934';
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
             </p>
             <table cellpadding="0" cellspacing="0" width="100%">
               <tr><td align="center" style="padding:0 0 28px">
-                <a href="${YOUTUBE_URL}"
+                <a href="${VIDEO_URL}"
                    style="display:inline-block;background:linear-gradient(135deg,#F5C842 0%,#E8A800 100%);color:#1A1A1A;font-weight:900;font-size:16px;text-decoration:none;padding:16px 36px;border-radius:12px;letter-spacing:.02em">
                   ▶&nbsp;&nbsp;Regarder la vidéo gratuite
                 </a>
