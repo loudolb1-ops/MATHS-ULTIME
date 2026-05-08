@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+import { Analytics } from '@vercel/analytics/react';
 import { Cinzel, Baloo_2, Montserrat } from 'next/font/google';
 import './globals.css'; // Global styles
 
@@ -53,6 +54,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="fr" className={`${cinzel.variable} ${baloo2.variable} ${montserrat.variable} scroll-smooth`}>
       <body className="antialiased font-sans" suppressHydrationWarning>
         {children}
+        <Analytics />
       </body>
     </html>
   );
