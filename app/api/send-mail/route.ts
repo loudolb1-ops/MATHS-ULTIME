@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           <td style="padding:36px 32px">
             <p style="margin:0 0 18px;font-size:16px;color:#1A1A1A;line-height:1.6">Salut <strong>${prenom}</strong>&nbsp;👋</p>
             <p style="margin:0 0 20px;font-size:15px;color:#444;line-height:1.7">
-              Accède à la première vidéo du guide gratuitement en cliquant ici&nbsp;:
+              Tu t'apprêtes à regarder les <strong>5 premières minutes</strong> de la vidéo Maths Ultime sur les <strong>fonctions et les suites</strong>. Clique ci-dessous pour y accéder&nbsp;:
             </p>
             <table cellpadding="0" cellspacing="0" width="100%">
               <tr><td align="center" style="padding:0 0 28px">
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
               </td></tr>
             </table>
             <p style="margin:0 0 16px;font-size:15px;color:#444;line-height:1.7">
-              Dans cette vidéo tu découvriras la méthode MATHS ULTIME&nbsp;: comprendre le cours
+              Tu vas découvrir la méthode MATHS ULTIME en action&nbsp;: comprendre le cours
               <em>avant</em> de l'apprendre, pour que tout devienne logique et que tu retiennes tout.
             </p>
             <p style="margin:0;font-size:15px;color:#444;line-height:1.7">Bonne révision&nbsp;! 💪</p>
