@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL  = 'chadsciences@maths-ultime.fr';
 const SENDER_NAME   = 'Maths Ultime';
-const VIDEO_URL = 'https://player.mediadelivery.net/embed/651267/5d0d7e5b-edb5-444f-b257-a2bd59c2a934';
+const VIDEO_URL = 'https://maths-ultime.fr/video-gratuite';
 
 export async function POST(req: NextRequest) {
   try {
