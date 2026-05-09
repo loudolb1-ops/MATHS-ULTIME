@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Play, Infinity as InfinityIcon, ShieldCheck, Lock, MessageCircle } from 'lucide-react';
+import { Play, Infinity as InfinityIcon, ShieldCheck, Lock, MessageCircle, CheckSquare } from 'lucide-react';
 import { GreekCTA } from '@/components/ui';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -162,7 +162,12 @@ export function PricingSection() {
                 <div className="rounded-lg p-2 shrink-0" style={{ background: '#EC6426', border: '2px solid rgba(255,255,255,0.3)' }}>
                   <Play className="w-5 h-5 text-white fill-current" />
                 </div>
-                Le Guide Vidéo Complet
+                <span>
+                  Le Guide Vidéo Complet
+                  <span style={{ display: 'block', fontWeight: 500, fontSize: 'clamp(11px,1vw,14px)', color: 'rgba(245,236,212,0.55)', marginTop: 2 }}>
+                    100% vidéos · tout le programme · apprentissage actif
+                  </span>
+                </span>
               </span>
               <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(16px,2vw,30px)', color: 'rgba(245,236,212,0.45)', textDecoration: 'line-through', textDecorationColor: '#EC6426', textDecorationThickness: 3, whiteSpace: 'nowrap' }}>197€</span>
             </motion.div>
@@ -195,6 +200,21 @@ export function PricingSection() {
                 Mises à jour à vie
               </span>
               <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(16px,2vw,30px)', color: 'rgba(245,236,212,0.45)', textDecoration: 'line-through', textDecorationColor: '#EC6426', textDecorationThickness: 3, whiteSpace: 'nowrap' }}>Inestimable</span>
+            </motion.div>
+
+            {/* Ligne 4 — Quizz */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '0px 0px -40px 0px' }} transition={{ duration: 0.45, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              className="flex justify-between items-center pb-5 px-2 cursor-default"
+              style={{ borderBottom: '2px solid rgba(212,168,83,0.15)' }}
+            >
+              <span className="flex items-center gap-3" style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 'clamp(13px,1.3vw,20px)', color: '#f5ecd4' }}>
+                <div className="rounded-lg p-2 shrink-0" style={{ background: '#EC6426', border: '2px solid rgba(255,255,255,0.3)' }}>
+                  <CheckSquare className="w-5 h-5 text-white" />
+                </div>
+                Quizz de validation après chaque module
+              </span>
+              <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(16px,2vw,30px)', color: 'rgba(245,236,212,0.45)', textDecoration: 'line-through', textDecorationColor: '#EC6426', textDecorationThickness: 3, whiteSpace: 'nowrap' }}>Inclus</span>
             </motion.div>
 
             {/* Total */}

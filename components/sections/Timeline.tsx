@@ -506,6 +506,36 @@ function Timeline() {
         >
           4 modules pour tout maîtriser, du sol au sommet
         </motion.p>
+
+        {/* Badges produit */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
+          className="flex flex-wrap justify-center gap-3 mt-6"
+        >
+          {[
+            { emoji: '🎬', label: '100% vidéos — zéro PDF' },
+            { emoji: '📐', label: 'Tout le programme de terminale' },
+            { emoji: '✅', label: 'Quizz de validation inclus' },
+            { emoji: '⚡', label: 'Apprentissage actif, pas passif' },
+          ].map(({ emoji, label }) => (
+            <span key={label} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '6px 16px',
+              borderRadius: 9999,
+              background: 'rgba(26,45,74,0.07)',
+              border: '1.5px solid rgba(26,45,74,0.18)',
+              fontFamily: 'var(--font-baloo)',
+              fontWeight: 600,
+              fontSize: 'clamp(12px,1.1vw,14px)',
+              color: '#1a2d4a',
+            }}>
+              <span>{emoji}</span>{label}
+            </span>
+          ))}
+        </motion.div>
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 pb-28">
