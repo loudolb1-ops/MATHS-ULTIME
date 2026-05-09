@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Star, Unlock, Lock } from 'lucide-react';
 import { GreekCTA } from '@/components/ui';
 // CORRECTION 1 : Import universel de framer-motion pour éviter que <motion.div> soit undefined
@@ -517,8 +518,7 @@ function Timeline() {
         >
           {[
             { emoji: '🎬', label: '100% vidéos — zéro PDF' },
-            { emoji: '📐', label: 'Tout le programme de terminale' },
-            { emoji: '✅', label: 'Quizz de validation inclus' },
+            { emoji: '📐', label: 'Tout le programme du lycée' },
             { emoji: '⚡', label: 'Apprentissage actif, pas passif' },
           ].map(({ emoji, label }) => (
             <span key={label} style={{
@@ -535,6 +535,31 @@ function Timeline() {
               <span>{emoji}</span>{label}
             </span>
           ))}
+        </motion.div>
+
+        {/* Bloc quizz */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+          className="flex items-center justify-center gap-4 mt-8"
+        >
+          <Image src="/innocent souriant.png" alt="chibi souriant" width={56} height={56} className="drop-shadow-md shrink-0" unoptimized />
+          <p style={{
+            fontFamily: 'var(--font-baloo)',
+            fontWeight: 600,
+            fontSize: 'clamp(13px,1.2vw,16px)',
+            color: '#1a2d4a',
+            background: 'rgba(26,45,74,0.06)',
+            border: '1.5px solid rgba(26,45,74,0.15)',
+            borderRadius: 14,
+            padding: '10px 20px',
+            maxWidth: 420,
+            lineHeight: 1.5,
+          }}>
+            ✅ Chaque vidéo se termine par un <strong>quizz</strong> pour vérifier que tu as bien compris le chapitre.
+          </p>
         </motion.div>
       </div>
 
