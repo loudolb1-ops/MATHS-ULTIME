@@ -545,7 +545,7 @@ function Timeline() {
           transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
           className="flex items-center justify-center gap-4 mt-8"
         >
-          <Image src="/innocent souriant.png" alt="chibi souriant" width={56} height={56} className="drop-shadow-md shrink-0" unoptimized />
+          <Image src="/innocent souriant.png" alt="chibi souriant" width={120} height={120} className="drop-shadow-md shrink-0" unoptimized />
           <p style={{
             fontFamily: 'var(--font-baloo)',
             fontWeight: 600,
