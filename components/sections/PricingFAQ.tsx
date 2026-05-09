@@ -3,62 +3,10 @@
 import Image from 'next/image';
 import { Play, Infinity as InfinityIcon, ShieldCheck, Lock, MessageCircle } from 'lucide-react';
 import { GreekCTA } from '@/components/ui';
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView, useAnimate } from 'motion/react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { faqItems, offerConfig } from '@/lib/offer';
 import { LogoVisuD } from '@/components/LogoVisuD';
-
-// ─── BOUTON VIDÉO GRATUITE — animation d'entrée isolée du hover ─────────────
-function FreeTrialButton() {
-  const [scope, animate] = useAnimate();
-  const inView = useInView(scope, { once: true, margin: '0px 0px -40px 0px' });
-
-  useEffect(() => {
-    if (!inView) return;
-    animate(scope.current, { opacity: 1 }, { delay: 0.3, duration: 0.4 });
-    animate(
-      scope.current,
-      { boxShadow: ['0 0 0px rgba(232,201,106,0)', '0 0 22px rgba(232,201,106,0.65)', '0 0 22px rgba(232,201,106,0.65)', '0 0 0px rgba(232,201,106,0)'] },
-      { delay: 0.5, duration: 1.3, times: [0, 0.25, 0.65, 1], ease: 'easeInOut' }
-    );
-  }, [inView]);
-
-  return (
-    <motion.button
-      ref={scope}
-      onClick={() => window.dispatchEvent(new CustomEvent('mu:open-popup'))}
-      whileTap={{ scale: 0.97, transition: { duration: 0.08 } }}
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 10,
-        padding: 'clamp(12px,1.2vw,16px) clamp(24px,2.5vw,40px)',
-        background: 'transparent', color: '#f5ecd4',
-        border: '2px solid rgba(232,201,106,0.5)',
-        borderRadius: 12,
-        fontFamily: 'var(--font-baloo)', fontWeight: 700,
-        fontSize: 'clamp(14px,1.2vw,18px)',
-        letterSpacing: '.04em',
-        cursor: 'pointer',
-        opacity: 0,
-        transition: 'background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease',
-      }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLButtonElement;
-        el.style.background = 'rgba(232,201,106,0.08)';
-        el.style.borderColor = '#e8c96a';
-        el.style.boxShadow = '0 0 16px rgba(232,201,106,0.4)';
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLButtonElement;
-        el.style.background = 'transparent';
-        el.style.borderColor = 'rgba(232,201,106,0.5)';
-        el.style.boxShadow = 'none';
-      }}
-    >
-      <Play className="w-4 h-4" style={{ color: '#e8c96a', flexShrink: 0 }} />
-      Obtenir une vidéo gratuite
-    </motion.button>
-  );
-}
 
 // ─── COUNTDOWN shared hook ───────────────────────────────────────────────────
 function useCountdown() {
@@ -370,22 +318,6 @@ export function PricingSection() {
               />
             </div>
           </div>
-        </div>
-
-        {/* ── Bloc "OU teste gratuitement" — centré sous le grid ── */}
-        <div className="relative z-10 flex flex-col items-center mt-10 md:mt-14">
-          {/* Texte : lettres qui s'écrivent via clipPath vertical */}
-          <motion.p
-            initial={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
-            whileInView={{ clipPath: 'inset(0 0 0% 0)', opacity: 1 }}
-            viewport={{ once: true, margin: '0px 0px -40px 0px' }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
-            style={{ fontFamily: 'var(--font-baloo)', fontWeight: 600, fontSize: 'clamp(13px,1.1vw,16px)', color: 'rgba(245,236,212,0.55)', marginBottom: 12, letterSpacing: '.04em' }}
-          >
-            Ou teste Maths Ultime gratuitement
-          </motion.p>
-
-          <FreeTrialButton />
         </div>
 
       </div>
