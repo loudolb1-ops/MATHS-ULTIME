@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     'Guide vidéo premium : comprends ton cours avant de l\'apprendre. Méthode visuelle ChadSciences pour le lycée. Offre de lancement 47 € (au lieu de 67 €).',
   icons: {
     icon: [
-      { url: '/logo_maths_ultime_detoured.png', type: 'image/png', sizes: 'any' },
+      { url: '/logo_maths_ultime_detoured.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: '/logo_maths_ultime_detoured.png',
+    apple: { url: '/logo_maths_ultime_detoured.png', sizes: '180x180' },
   },
   openGraph: {
     title: 'Maths Ultime — Guide vidéo ChadSciences',

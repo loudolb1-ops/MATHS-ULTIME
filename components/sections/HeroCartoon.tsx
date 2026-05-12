@@ -18,7 +18,7 @@ const C = {
 };
 
 // ─── UTILS ────────────────────────────────────────────────────────────────────
-const BUNNY_EMBED_URL = 'https://player.mediadelivery.net/embed/651267/f1f9586a-256f-41e0-b953-0f9d9f44e84d?autoplay=true&loop=false&muted=true&preload=true&responsive=true';
+const BUNNY_EMBED_URL = 'https://player.mediadelivery.net/embed/651267/f1f9586a-256f-41e0-b953-0f9d9f44e84d?autoplay=true&loop=false&muted=true&preload=false&responsive=true';
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const SKY_SYMS = [
@@ -413,7 +413,6 @@ export function HeroCartoon() {
           width={180}
           height={90}
           style={{ height: 'clamp(52px, 6vw, 80px)', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 1px 8px rgba(0,0,0,0.55))' }}
-          priority
         />
       </div>
 
@@ -507,7 +506,7 @@ export function HeroCartoon() {
           className="object-cover object-center object-top sm:object-center"
           style={{ transform: 'scale(1.20)', transformOrigin: '50% 32%' }}
           priority
-          quality={100}
+          quality={85}
           sizes="100vw"
         />
       </motion.div>
@@ -762,7 +761,7 @@ export function HeroCartoon() {
         initial={{ opacity:0, x:80 }} animate={{ opacity:1, x:0 }} transition={{ delay:0.4, duration:0.85, type:'spring', stiffness:60 }}
         className="absolute z-30 hidden lg:block pointer-events-none"
         style={{ right:'0', bottom:0, width:'clamp(228px, 35vw, 655px)', height:'clamp(403px, 101vh, 1033px)' }}>
-        <Image src="/zeuf_4x.png" alt="Zeus chibi" fill className="object-contain object-bottom" quality={100} unoptimized sizes="(max-width: 768px) 0px, (max-width: 1440px) 36vw, 520px" priority />
+        <Image src="/zeuf_4x.png" alt="Zeus chibi" fill className="object-contain object-bottom" quality={75} sizes="(max-width: 768px) 0px, (max-width: 1440px) 36vw, 520px" />
       </motion.div>
 
       {/* Fondu bas — transition subtile vers section suivante */}

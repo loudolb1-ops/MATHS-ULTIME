@@ -157,6 +157,7 @@ function YouTubeCarousel() {
                 background: 'linear-gradient(90deg, transparent, #8a7968 30%, #8a7968 70%, transparent)',
               }} />
               <img
+                loading="lazy"
                 src={`/commentaires/${filename}`}
                 alt="Commentaire YouTube"
                 style={{
