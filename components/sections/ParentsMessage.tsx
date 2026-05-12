@@ -312,7 +312,7 @@ export function ParentsMessage() {
 
               {/* Zone header fixe — même hauteur que carte droite */}
               <div style={{ minHeight: 240, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }}>
-                <h3 style={{
+                <h3 data-nosnippet style={{
                   fontFamily: 'var(--font-baloo)',
                   fontWeight: 900,
                   fontSize: 'clamp(18px, 2vw, 26px)',

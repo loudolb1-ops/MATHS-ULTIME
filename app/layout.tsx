@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Maths Ultime',
   description:
-    'Guide vidéo premium : comprends ton cours avant de l\'apprendre. Méthode visuelle ChadSciences pour le lycée. Offre de lancement 47 € (au lieu de 67 €).',
+    'Guide vidéo en maths pour lycéens. Comprends vraiment ton cours grâce à la méthode visuelle ChadSciences — programme complet, structuré, disponible immédiatement.',
   icons: {
     icon: [
       { url: '/logo_maths_ultime_detoured.png', type: 'image/png', sizes: '512x512' },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Maths Ultime — Guide vidéo ChadSciences',
     description:
-      'Méthode visuelle pour le lycée : parcours structuré, vidéos et fiches. Offre de lancement 47 €.',
+      'Guide vidéo en maths pour lycéens — méthode visuelle ChadSciences, programme complet, disponible immédiatement.',
     type: 'website',
     locale: 'fr_FR',
     images: [{ url: '/chadlogo.jpeg', width: 1200, height: 1200, alt: 'Maths Ultime — ChadSciences' }],
