@@ -386,7 +386,7 @@ export default function VideoGratuitePage() {
                   </p>
                 </div>
                 <a
-                  href="/#pricing"
+                  href="https://guide.maths-ultime.fr/paiement"
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -430,7 +430,7 @@ export default function VideoGratuitePage() {
                 lineHeight: 1.6,
               }}>
                 Veuillez{' '}
-                <a href="/#pricing" style={{ color: '#EC6426', textDecoration: 'none', fontWeight: 700 }}>
+                <a href="https://guide.maths-ultime.fr/paiement" style={{ color: '#EC6426', textDecoration: 'none', fontWeight: 700 }}>
                   obtenir l&apos;accès complet
                 </a>
                 {' '}si vous avez déjà un compte
