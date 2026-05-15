@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           <td style="padding:36px 32px">
             <p style="margin:0 0 18px;font-size:16px;color:#1A1A1A;line-height:1.6">Salut <strong>${prenom}</strong>&nbsp;👋</p>
             <p style="margin:0 0 20px;font-size:15px;color:#444;line-height:1.7">
-              Tu t'apprêtes à regarder les <strong>5 premières minutes</strong> de la vidéo Maths Ultime sur les <strong>fonctions et les suites</strong>. Clique ci-dessous pour y accéder&nbsp;:
+              Tu t'apprêtes à regarder la vidéo d'<strong>Introduction</strong> à la méthode Maths Ultime. Clique ci-dessous pour y accéder&nbsp;:
             </p>
             <table cellpadding="0" cellspacing="0" width="100%">
               <tr><td align="center" style="padding:0 0 28px">

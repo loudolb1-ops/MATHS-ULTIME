@@ -1,25 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Play, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
+import { Lock, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const FREE_VIDEO_URL =
   'https://player.mediadelivery.net/embed/651267/a320fd04-0149-4642-87ee-456a6546e0bf?autoplay=false&loop=false&muted=false&preload=true&responsive=true';
 
 type Chapter = { id: string; title: string; locked: boolean };
-type Module  = { id: string; label: string; chapters: Chapter[] };
+type Module  = { id: string; label: string; locked: boolean; chapters: Chapter[] };
 
 const MODULES: Module[] = [
   {
     id: 'intro',
-    label: 'INTRODUCTION',
+    label: 'Introduction',
+    locked: false,
     chapters: [
-      { id: 'free', title: 'La méthode en action', locked: false },
+      { id: 'free', title: 'Introduction', locked: false },
     ],
   },
   {
     id: 'omega',
-    label: 'Ω OMEGA — PRÉREQUIS',
+    label: 'Ω OMEGA - PREREQUIS',
+    locked: true,
     chapters: [
       { id: 'omega-1', title: '1 - Mindset', locked: true },
       { id: 'omega-2', title: '2 - Ensembles de nombres', locked: true },
@@ -28,7 +31,8 @@ const MODULES: Module[] = [
   },
   {
     id: 'alpha',
-    label: 'α ALPHA — PROBABILITÉS',
+    label: 'α ALPHA - PROBABILITES',
+    locked: true,
     chapters: [
       { id: 'alpha-1', title: '1 - Probabilités conditionnelles', locked: true },
       { id: 'alpha-2', title: '2 - Variables aléatoires et Loi Binomiale', locked: true },
@@ -37,16 +41,18 @@ const MODULES: Module[] = [
   },
   {
     id: 'delta',
-    label: 'Δ DELTA — GÉOMÉTRIE',
+    label: 'Δ DELTA - GEOMETRIE',
+    locked: true,
     chapters: [
       { id: 'delta-1', title: '1 - Trigonométrie', locked: true },
       { id: 'delta-2', title: '2 - Vecteurs', locked: true },
-      { id: 'delta-3', title: '3 - Géométrie dans l\'espace', locked: true },
+      { id: 'delta-3', title: "3 - Géométrie dans l'espace", locked: true },
     ],
   },
   {
     id: 'sigma',
-    label: 'Σ SIGMA — CALCUL',
+    label: 'Σ SIGMA - CALCUL',
+    locked: true,
     chapters: [
       { id: 'sigma-1', title: '1 - Calcul littéral / Équations', locked: true },
       { id: 'sigma-2', title: '2 - Fonctions suites limites', locked: true },
@@ -58,7 +64,9 @@ const MODULES: Module[] = [
 
 export default function VideoGratuitePage() {
   const [selected, setSelected] = useState<string>('free');
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ intro: true, omega: true, alpha: false, delta: false, sigma: false });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    intro: true, omega: true, alpha: false, delta: false, sigma: false,
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const selectedChapter = MODULES.flatMap(m => m.chapters).find(c => c.id === selected);
@@ -69,72 +77,95 @@ export default function VideoGratuitePage() {
 
   const sidebar = (
     <div style={{
-      width: 280,
+      width: 300,
       flexShrink: 0,
-      background: '#0a1628',
-      borderRight: '1px solid rgba(232,201,106,0.12)',
+      background: '#ffffff',
+      borderRight: '1px solid #e5e7eb',
       display: 'flex',
       flexDirection: 'column',
       overflowY: 'auto',
+      height: '100%',
     }}>
-      {/* Profil */}
-      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(232,201,106,0.1)' }}>
+      {/* Carte profil */}
+      <div style={{
+        margin: 16,
+        padding: '20px 16px',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        borderRadius: 12,
+        boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
+      }}>
         {/* Avatar */}
         <div style={{
-          width: 56, height: 56,
+          width: 64, height: 64,
           borderRadius: '50%',
-          background: 'linear-gradient(135deg,#FF8040,#EC6426)',
-          border: '2.5px solid #e8c96a',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          overflow: 'hidden',
           marginBottom: 10,
-          fontFamily: 'var(--font-cinzel)',
-          fontWeight: 700,
-          fontSize: 18,
-          color: '#fff',
-          boxShadow: '0 4px 12px rgba(236,100,38,0.3)',
+          border: '2px solid #e5e7eb',
         }}>
-          CS
+          <Image
+            src="/hautain-flipped.png"
+            alt="ChadSciences"
+            width={64}
+            height={64}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         </div>
-        <p style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 15, color: '#f5ecd4', marginBottom: 12 }}>
+
+        <p style={{ fontWeight: 700, fontSize: 15, color: '#111827', marginBottom: 14, fontFamily: 'sans-serif' }}>
           ChadSciences
         </p>
-        {/* Barre de progression */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            flex: 1,
-            height: 6,
-            borderRadius: 3,
-            background: 'rgba(255,255,255,0.1)',
-            overflow: 'hidden',
+
+        {/* Boutons Précédent / Suivant */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+          <button style={{
+            flex: 1, padding: '7px 0',
+            border: '1px solid #d1d5db',
+            borderRadius: 6,
+            background: '#ffffff',
+            color: '#374151',
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: 'not-allowed',
+            fontFamily: 'sans-serif',
           }}>
-            <div style={{ width: '5%', height: '100%', background: 'linear-gradient(90deg,#e8c96a,#EC6426)', borderRadius: 3 }} />
-          </div>
-          <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 11, color: '#e8c96a', whiteSpace: 'nowrap' }}>0%</span>
+            Précédent
+          </button>
+          <button style={{
+            flex: 1, padding: '7px 0',
+            border: '1px solid #d1d5db',
+            borderRadius: 6,
+            background: '#4b5563',
+            color: '#ffffff',
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: 'not-allowed',
+            fontFamily: 'sans-serif',
+          }}>
+            Suivant
+          </button>
+        </div>
+
+        {/* Barre de progression */}
+        <div style={{
+          width: '100%',
+          height: 20,
+          borderRadius: 10,
+          border: '1px solid #d1d5db',
+          background: '#f3f4f6',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: 8,
+        }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', fontFamily: 'sans-serif' }}>0%</span>
         </div>
       </div>
 
-      {/* Boutons nav */}
-      <div style={{ display: 'flex', gap: 8, padding: '12px 16px', borderBottom: '1px solid rgba(232,201,106,0.08)' }}>
-        {['Précédent', 'Suivant'].map((label, i) => (
-          <button key={i} style={{
-            flex: 1, padding: '7px 0',
-            border: '1.5px solid rgba(232,201,106,0.25)',
-            borderRadius: 8,
-            background: i === 1 ? 'rgba(232,201,106,0.1)' : 'transparent',
-            color: 'rgba(245,236,212,0.55)',
-            fontFamily: 'var(--font-baloo)', fontWeight: 600, fontSize: 12,
-            cursor: 'not-allowed',
-          }}>
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Modules */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+      {/* Liste modules */}
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         {MODULES.map(mod => (
           <div key={mod.id}>
-            {/* Header module */}
             <button
               onClick={() => toggleModule(mod.id)}
               style={{
@@ -142,68 +173,74 @@ export default function VideoGratuitePage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
-                padding: '11px 16px',
+                padding: '12px 16px',
                 background: 'none',
                 border: 'none',
+                borderBottom: '1px solid #f3f4f6',
                 cursor: 'pointer',
                 textAlign: 'left',
               }}
             >
               {expanded[mod.id]
-                ? <ChevronDown size={13} color="#e8c96a" strokeWidth={2.5} style={{ flexShrink: 0 }} />
-                : <ChevronRight size={13} color="rgba(232,201,106,0.45)" strokeWidth={2.5} style={{ flexShrink: 0 }} />
+                ? <ChevronDown size={14} color="#6b7280" strokeWidth={2} style={{ flexShrink: 0 }} />
+                : <ChevronRight size={14} color="#9ca3af" strokeWidth={2} style={{ flexShrink: 0 }} />
               }
               <span style={{
-                fontFamily: 'var(--font-baloo)',
-                fontWeight: 800,
-                fontSize: 11,
-                letterSpacing: '.06em',
-                textTransform: 'uppercase',
-                color: expanded[mod.id] ? '#e8c96a' : 'rgba(245,236,212,0.5)',
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#374151',
+                fontFamily: 'sans-serif',
+                flex: 1,
               }}>
                 {mod.label}
               </span>
-              {mod.id !== 'intro' && (
-                <Lock size={11} color="rgba(106,122,150,0.7)" strokeWidth={2} style={{ marginLeft: 'auto', flexShrink: 0 }} />
+              {mod.locked && (
+                <Lock size={13} color="#9ca3af" strokeWidth={2} style={{ flexShrink: 0 }} />
               )}
             </button>
 
-            {/* Chapitres */}
             {expanded[mod.id] && (
-              <div style={{ paddingBottom: 4 }}>
+              <div>
                 {mod.chapters.map(ch => (
                   <button
                     key={ch.id}
-                    onClick={() => setSelected(ch.id)}
+                    onClick={() => !ch.locked && setSelected(ch.id)}
                     disabled={ch.locked}
                     style={{
                       width: '100%',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 10,
-                      padding: '9px 16px 9px 34px',
-                      background: selected === ch.id ? 'rgba(236,100,38,0.12)' : 'none',
+                      padding: '10px 16px 10px 38px',
+                      background: selected === ch.id ? '#fef3ec' : 'none',
                       borderLeft: selected === ch.id ? '3px solid #EC6426' : '3px solid transparent',
                       border: 'none',
+                      borderBottom: '1px solid #f9fafb',
                       cursor: ch.locked ? 'default' : 'pointer',
                       textAlign: 'left',
                     }}
                   >
                     {ch.locked ? (
-                      <Lock size={12} color="#4a5568" strokeWidth={2} style={{ flexShrink: 0 }} />
+                      <Lock size={12} color="#d1d5db" strokeWidth={2} style={{ flexShrink: 0 }} />
                     ) : (
                       <div style={{
-                        width: 8, height: 8, borderRadius: '50%',
-                        background: selected === ch.id ? '#EC6426' : 'rgba(232,201,106,0.5)',
+                        width: 16, height: 16,
+                        borderRadius: '50%',
+                        border: `2px solid ${selected === ch.id ? '#EC6426' : '#d1d5db'}`,
                         flexShrink: 0,
-                      }} />
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        {selected === ch.id && (
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#EC6426' }} />
+                        )}
+                      </div>
                     )}
                     <span style={{
-                      fontFamily: 'var(--font-baloo)',
-                      fontWeight: ch.locked ? 500 : 600,
                       fontSize: 13,
-                      color: ch.locked ? 'rgba(255,255,255,0.25)' : selected === ch.id ? '#f5ecd4' : 'rgba(245,236,212,0.65)',
-                      lineHeight: 1.35,
+                      fontWeight: 500,
+                      color: ch.locked ? '#d1d5db' : selected === ch.id ? '#111827' : '#374151',
+                      fontFamily: 'sans-serif',
+                      lineHeight: 1.4,
                     }}>
                       {ch.title}
                     </span>
@@ -218,76 +255,68 @@ export default function VideoGratuitePage() {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#071229', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f5f0eb', overflow: 'hidden' }}>
 
-      {/* ── Navbar ── */}
+      {/* ── Navbar orange ── */}
       <nav style={{
         flexShrink: 0,
-        height: 60,
-        background: '#071229',
-        borderBottom: '1px solid rgba(232,201,106,0.15)',
+        height: 56,
+        background: '#EC6426',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 20px',
         zIndex: 50,
       }}>
-        {/* Gauche : burger mobile + logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
             className="lg:hidden"
             onClick={() => setSidebarOpen(o => !o)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#f5ecd4' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#fff' }}
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <div>
-            <span style={{ fontFamily: 'var(--font-cinzel)', fontWeight: 900, fontSize: 16, color: '#f5ecd4', letterSpacing: '.06em' }}>
-              MATHS ULTIME
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Image
+              src="/logo_maths_ultime_detoured.png"
+              alt="Maths Ultime"
+              width={36}
+              height={36}
+              style={{ width: 36, height: 36, objectFit: 'contain' }}
+            />
             <span style={{
-              display: 'block',
-              fontFamily: 'var(--font-baloo)',
-              fontWeight: 600,
-              fontSize: 10,
-              color: '#e8c96a',
-              letterSpacing: '.1em',
-              textTransform: 'uppercase',
-              lineHeight: 1,
+              fontFamily: 'sans-serif',
+              fontWeight: 700,
+              fontSize: 16,
+              color: '#ffffff',
+              letterSpacing: '.01em',
             }}>
-              by ChadSciences
+              Maths Ultime
             </span>
           </div>
         </div>
 
-        {/* Droite : CTA */}
         <a
           href="/#pricing"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 8,
-            padding: '8px 18px',
-            background: 'linear-gradient(135deg,#FF8040,#EC6426)',
-            border: '2px solid #2a1e12',
-            borderRadius: 8,
-            boxShadow: '3px 3px 0 rgba(42,30,18,0.5)',
-            fontFamily: 'var(--font-baloo)',
-            fontWeight: 800,
+            padding: '8px 20px',
+            background: '#ffffff',
+            borderRadius: 6,
+            fontFamily: 'sans-serif',
+            fontWeight: 600,
             fontSize: 13,
-            color: '#fff',
+            color: '#EC6426',
             textDecoration: 'none',
-            textTransform: 'uppercase',
-            letterSpacing: '.05em',
             whiteSpace: 'nowrap',
           }}
         >
-          <Play size={12} fill="#fff" strokeWidth={0} />
-          Accès complet
+          Connectez-vous
         </a>
       </nav>
 
-      {/* ── Corps : sidebar + contenu ── */}
+      {/* ── Corps ── */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
 
         {/* Sidebar desktop */}
@@ -304,44 +333,36 @@ export default function VideoGratuitePage() {
             <div style={{ height: '100%' }} onClick={e => e.stopPropagation()}>
               {sidebar}
             </div>
-            <div style={{ flex: 1, background: 'rgba(7,18,41,0.6)', backdropFilter: 'blur(2px)' }} />
+            <div style={{ flex: 1, background: 'rgba(0,0,0,0.3)' }} />
           </div>
         )}
 
-        {/* ── Zone contenu principale ── */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '28px 24px' }}>
-          {selectedChapter && !selectedChapter.locked ? (
-            /* Vidéo débloquée */
-            <div style={{ maxWidth: 860, margin: '0 auto' }}>
-              {/* Titre + badge */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-                <h1 style={{
-                  fontFamily: 'var(--font-baloo)',
-                  fontWeight: 900,
-                  fontSize: 'clamp(18px,2vw,26px)',
-                  color: '#f5ecd4',
-                  margin: 0,
-                }}>
-                  {selectedChapter.title}
-                </h1>
-                <span style={{
-                  background: '#EC6426',
-                  color: '#fff',
-                  fontFamily: 'var(--font-baloo)',
-                  fontWeight: 800,
-                  fontSize: 11,
-                  letterSpacing: '.1em',
-                  textTransform: 'uppercase',
-                  padding: '3px 10px',
-                  borderRadius: 5,
-                  border: '1.5px solid rgba(255,255,255,0.3)',
-                }}>
-                  GRATUIT
-                </span>
-              </div>
+        {/* ── Zone contenu ── */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 28px' }}>
 
-              {/* Iframe */}
-              <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,0.5)' }}>
+          {/* Titre page */}
+          <h1 style={{
+            fontFamily: 'sans-serif',
+            fontWeight: 700,
+            fontSize: 22,
+            color: '#111827',
+            marginBottom: 24,
+          }}>
+            Maths Ultime
+          </h1>
+
+          {selectedChapter && !selectedChapter.locked ? (
+            <div style={{ maxWidth: 900 }}>
+              {/* Lecteur vidéo */}
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                paddingTop: '56.25%',
+                borderRadius: 8,
+                overflow: 'hidden',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+                background: '#000',
+              }}>
                 <iframe
                   src={FREE_VIDEO_URL}
                   loading="lazy"
@@ -351,25 +372,26 @@ export default function VideoGratuitePage() {
                 />
               </div>
 
-              {/* CTA sous la vidéo */}
+              {/* Bannière accès complet */}
               <div style={{
-                marginTop: 28,
-                padding: '20px 24px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(232,201,106,0.15)',
-                borderRadius: 12,
+                marginTop: 24,
+                padding: '18px 24px',
+                background: '#ffffff',
+                border: '1px solid #e5e7eb',
+                borderRadius: 10,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
                 gap: 16,
+                boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
               }}>
                 <div>
-                  <p style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 15, color: '#f5ecd4', margin: '0 0 4px' }}>
+                  <p style={{ fontFamily: 'sans-serif', fontWeight: 700, fontSize: 15, color: '#111827', margin: '0 0 4px' }}>
                     Tu veux accéder à toute la formation ?
                   </p>
-                  <p style={{ fontFamily: 'var(--font-baloo)', fontWeight: 500, fontSize: 13, color: 'rgba(245,236,212,0.55)', margin: 0 }}>
-                    Débloque les {MODULES.flatMap(m => m.chapters).filter(c => c.locked).length} vidéos restantes du programme complet.
+                  <p style={{ fontFamily: 'sans-serif', fontWeight: 400, fontSize: 13, color: '#6b7280', margin: 0 }}>
+                    Débloque les {MODULES.flatMap(m => m.chapters).filter(c => c.locked).length} vidéos restantes.
                   </p>
                 </div>
                 <a
@@ -377,19 +399,14 @@ export default function VideoGratuitePage() {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: 8,
-                    padding: '12px 24px',
-                    background: 'linear-gradient(135deg,#FF8040,#EC6426)',
-                    border: '2.5px solid #2a1e12',
-                    borderRadius: 10,
-                    boxShadow: '4px 4px 0 rgba(42,30,18,0.5)',
-                    fontFamily: 'var(--font-baloo)',
-                    fontWeight: 900,
+                    padding: '10px 22px',
+                    background: '#EC6426',
+                    borderRadius: 6,
+                    fontFamily: 'sans-serif',
+                    fontWeight: 600,
                     fontSize: 14,
                     color: '#fff',
                     textDecoration: 'none',
-                    textTransform: 'uppercase',
-                    letterSpacing: '.05em',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -398,66 +415,26 @@ export default function VideoGratuitePage() {
               </div>
             </div>
           ) : (
-            /* Vidéo verrouillée */
-            <div style={{
-              maxWidth: 560,
-              margin: '60px auto 0',
-              textAlign: 'center',
-            }}>
+            /* Contenu verrouillé */
+            <div style={{ maxWidth: 560, textAlign: 'center', marginTop: 80 }}>
               <div style={{
                 width: 80, height: 80,
                 borderRadius: '50%',
-                background: 'rgba(255,255,255,0.06)',
-                border: '2px solid rgba(106,122,150,0.3)',
+                background: '#e5e7eb',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 24px',
+                margin: '0 auto 20px',
               }}>
-                <Lock size={36} color="#4a5568" strokeWidth={1.5} />
+                <Lock size={36} color="#9ca3af" strokeWidth={1.5} />
               </div>
-              <h2 style={{
-                fontFamily: 'var(--font-baloo)',
-                fontWeight: 900,
-                fontSize: 'clamp(18px,2vw,24px)',
-                color: '#f5ecd4',
-                marginBottom: 12,
-              }}>
-                {selectedChapter?.title ?? 'Contenu verrouillé'}
-              </h2>
-              <p style={{
-                fontFamily: 'var(--font-baloo)',
-                fontWeight: 500,
-                fontSize: 15,
-                color: 'rgba(245,236,212,0.5)',
-                lineHeight: 1.6,
-                marginBottom: 32,
-              }}>
-                Cette vidéo est réservée aux membres Maths Ultime.
-                Rejoins la formation pour accéder à l&apos;intégralité du programme.
+              <p style={{ fontFamily: 'sans-serif', fontSize: 15, color: '#374151', lineHeight: 1.6, marginBottom: 8 }}>
+                Veuillez{' '}
+                <a href="/#pricing" style={{ color: '#EC6426', textDecoration: 'none', fontWeight: 600 }}>
+                  obtenir l&apos;accès complet
+                </a>
+                {' '}si vous avez déjà un compte
               </p>
-              <a
-                href="/#pricing"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '14px 32px',
-                  background: 'linear-gradient(135deg,#FF8040,#EC6426)',
-                  border: '3px solid #2a1e12',
-                  borderRadius: 12,
-                  boxShadow: '6px 6px 0 rgba(42,30,18,0.5)',
-                  fontFamily: 'var(--font-baloo)',
-                  fontWeight: 900,
-                  fontSize: 15,
-                  color: '#fff',
-                  textDecoration: 'none',
-                  textTransform: 'uppercase',
-                  letterSpacing: '.06em',
-                }}
-              >
-                Obtenir l&apos;accès complet →
-              </a>
             </div>
           )}
         </div>
