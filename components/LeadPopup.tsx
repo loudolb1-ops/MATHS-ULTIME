@@ -66,7 +66,6 @@ export function LeadPopup() {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countryRef = useRef<HTMLDivElement>(null);
   const autoTriggered = useRef(false);
-  const unregisterBeforeUnload = useRef<(() => void) | null>(null);
 
   // Trigger manuel via événement
   useEffect(() => {
@@ -75,42 +74,27 @@ export function LeadPopup() {
     return () => window.removeEventListener('mu:open-popup', handler);
   }, []);
 
-  // Trigger automatique : 10s + exit intent + beforeunload
+  // Trigger automatique : 10s + exit intent (souris vers barre d'onglets / bouton fermer)
   useEffect(() => {
 
     function trigger() {
       if (autoTriggered.current) return;
       autoTriggered.current = true;
       setIsOpen(true);
-      // Dès que le popup s'ouvre, on retire le beforeunload
-      unregisterBeforeUnload.current?.();
     }
 
     // Timer 10 secondes
     const timer = setTimeout(trigger, 10000);
 
-    // Exit intent : souris quitte le document (vers barre d'onglets / bouton fermer)
+    // Exit intent : souris sort par le haut du viewport (vers onglets / bouton X)
     function handleExitIntent(e: MouseEvent) {
-      if (e.relatedTarget === null) trigger();
+      if (e.clientY < 5) trigger();
     }
-    document.addEventListener('mouseleave', handleExitIntent);
-
-    // Fermeture d'onglet : montre le popup + dialog natif du navigateur
-    function handleBeforeUnload(e: BeforeUnloadEvent) {
-      if (!autoTriggered.current) {
-        autoTriggered.current = true;
-        setIsOpen(true);
-      }
-      e.preventDefault();
-      e.returnValue = '';
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    unregisterBeforeUnload.current = () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('mousemove', handleExitIntent);
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('mouseleave', handleExitIntent);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('mousemove', handleExitIntent);
     };
   }, []);
 
