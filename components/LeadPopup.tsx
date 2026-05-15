@@ -66,44 +66,47 @@ export function LeadPopup() {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countryRef = useRef<HTMLDivElement>(null);
   const autoTriggered = useRef(false);
-  const popupOpenRef = useRef(false);
+  // Ref vers le wrapper DOM du popup — permet de le rendre visible SYNCHRONIQUEMENT
+  // depuis beforeunload, sans attendre le cycle de render React
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  function showPopupImmediately() {
+    if (autoTriggered.current) return;
+    autoTriggered.current = true;
+    // 1) Manipulation DOM directe et synchrone — visible AVANT le re-render React
+    if (backdropRef.current) {
+      backdropRef.current.style.display = 'flex';
+      backdropRef.current.style.opacity = '1';
+    }
+    // 2) State React pour cohérence (s'applique au prochain render)
+    setIsOpen(true);
+  }
 
   // Trigger manuel via événement
   useEffect(() => {
-    const handler = () => { setIsOpen(true); popupOpenRef.current = true; };
+    const handler = () => showPopupImmediately();
     window.addEventListener('mu:open-popup', handler);
     return () => window.removeEventListener('mu:open-popup', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Trigger automatique : 10s + exit intent + beforeunload (fermeture onglet)
   useEffect(() => {
-
-    function trigger() {
-      if (autoTriggered.current) return;
-      autoTriggered.current = true;
-      popupOpenRef.current = true;
-      setIsOpen(true);
-    }
-
     // Timer 10 secondes
-    const timer = setTimeout(trigger, 10000);
+    const timer = setTimeout(showPopupImmediately, 10000);
 
     // Exit intent : souris vers barre d'onglets / bouton fermer
     function handleExitIntent(e: MouseEvent) {
-      if (e.clientY < 5) trigger();
+      if (e.clientY < 5) showPopupImmediately();
     }
     document.addEventListener('mousemove', handleExitIntent);
 
-    // Fermeture d'onglet : ouvre le popup ET bloque avec le dialog natif
-    // Si l'user clique "Rester", il voit le popup ouvert
+    // Fermeture d'onglet : manipulation DOM synchrone + dialog natif
     function handleBeforeUnload(e: BeforeUnloadEvent) {
-      // Ne bloquer que si le popup n'a jamais été montré dans cette session
-      if (popupOpenRef.current) return;
-      // Ouvrir le popup immédiatement (visible si l'user reste)
-      autoTriggered.current = true;
-      popupOpenRef.current = true;
-      setIsOpen(true);
-      // Dialog natif du navigateur — bloque la fermeture
+      if (autoTriggered.current) return;
+      // Rendre le popup visible SYNCHRONIQUEMENT avant que le navigateur
+      // suspende l'exécution JS pour afficher le dialog "Quitter ?"
+      showPopupImmediately();
       e.preventDefault();
       e.returnValue = '';
       return '';
@@ -115,6 +118,7 @@ export function LeadPopup() {
       document.removeEventListener('mousemove', handleExitIntent);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -151,6 +155,10 @@ export function LeadPopup() {
   function handleClose() {
     setIsOpen(false);
     setCountryOpen(false);
+    // Re-cacher le backdrop si affiché par manipulation DOM directe
+    if (backdropRef.current) {
+      backdropRef.current.style.display = 'none';
+    }
   }
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -232,24 +240,23 @@ export function LeadPopup() {
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          key="popup-backdrop"
-          onClick={handleBackdropClick}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 200,
-            background: 'rgba(7,18,41,0.45)',
-            backdropFilter: 'blur(2px) saturate(1.4)',
-            WebkitBackdropFilter: 'blur(2px) saturate(1.4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '16px',
-          }}
-        >
+    <>
+      {/* Backdrop toujours dans le DOM — affiché via CSS display direct (synchrone pour beforeunload) */}
+      <div
+        ref={backdropRef}
+        onClick={handleBackdropClick}
+        style={{
+          display: isOpen ? 'flex' : 'none',
+          position: 'fixed', inset: 0, zIndex: 200,
+          background: 'rgba(7,18,41,0.45)',
+          backdropFilter: 'blur(2px) saturate(1.4)',
+          WebkitBackdropFilter: 'blur(2px) saturate(1.4)',
+          alignItems: 'center', justifyContent: 'center',
+          padding: '16px',
+        }}
+      >
+        <AnimatePresence>
+        {isOpen && (
           <motion.div
             key="popup-card"
             initial={{ opacity: 0, scale: 0.93, y: 24 }}
@@ -522,8 +529,9 @@ export function LeadPopup() {
             {/* Frise dorée bas */}
             <div style={{ height: 4, background: 'linear-gradient(90deg, #D4A853 0%, #F5C842 50%, #D4A853 100%)' }} />
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
