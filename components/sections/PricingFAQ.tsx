@@ -331,6 +331,33 @@ export function PricingSection() {
         </div>
 
       </div>
+
+      {/* Bouton discret vidéo gratuite */}
+      <div style={{ textAlign: 'center', paddingBottom: 32, paddingTop: 4 }}>
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('mu:open-popup'))}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'var(--font-baloo)',
+            fontWeight: 500,
+            fontSize: 13,
+            color: 'rgba(245,236,212,0.35)',
+            letterSpacing: '.03em',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            transition: 'color 0.2s',
+            padding: '4px 8px',
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(232,201,106,0.65)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(245,236,212,0.35)'; }}
+        >
+          <Play size={10} style={{ color: 'inherit' }} fill="currentColor" strokeWidth={0} />
+          Tu hésites encore ? Reçois une vidéo gratuite d&apos;essai
+        </button>
+      </div>
     </section>
   );
 }
