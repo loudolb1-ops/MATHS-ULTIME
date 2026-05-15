@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Lock, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
@@ -70,6 +70,15 @@ export default function VideoGratuitePage() {
     intro: true, omega: true, alpha: false, delta: false, sigma: false,
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const selectedChapter = MODULES.flatMap(m => m.chapters).find(c => c.id === selected);
 
@@ -274,14 +283,15 @@ export default function VideoGratuitePage() {
         boxShadow: '0 2px 12px rgba(42,30,18,0.25)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {/* Burger mobile */}
-          <button
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(o => !o)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#fff', display: 'flex' }}
-          >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Burger mobile — caché sur desktop */}
+          {!isDesktop && (
+            <button
+              onClick={() => setSidebarOpen(o => !o)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#fff', display: 'flex' }}
+            >
+              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          )}
 
           <Image
             src="/logo_maths_ultime_detoured.png"
@@ -307,12 +317,11 @@ export default function VideoGratuitePage() {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
 
         {/* Sidebar desktop — 25% */}
-        <div
-          className="hidden lg:block"
-          style={{ width: '25%', minWidth: 240, maxWidth: 340, flexShrink: 0, height: '100%' }}
-        >
-          {sidebar}
-        </div>
+        {isDesktop && (
+          <div style={{ width: '25%', minWidth: 240, maxWidth: 340, flexShrink: 0, height: '100%' }}>
+            {sidebar}
+          </div>
+        )}
 
         {/* Sidebar mobile overlay */}
         {sidebarOpen && (
@@ -338,7 +347,7 @@ export default function VideoGratuitePage() {
             marginBottom: 28,
             letterSpacing: '.03em',
           }}>
-            Maths Ultime
+            Introduction
           </h1>
 
           {selectedChapter && !selectedChapter.locked ? (
@@ -403,6 +412,15 @@ export default function VideoGratuitePage() {
                     textTransform: 'uppercase',
                     letterSpacing: '.05em',
                     whiteSpace: 'nowrap',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.transform = 'translate(-2px, -2px)';
+                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = '6px 6px 0 rgba(42,30,18,0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.transform = 'translate(0, 0)';
+                    (e.currentTarget as HTMLAnchorElement).style.boxShadow = '4px 4px 0 rgba(42,30,18,0.4)';
                   }}
                 >
                   Obtenir l&apos;accès complet →
@@ -430,7 +448,10 @@ export default function VideoGratuitePage() {
                 lineHeight: 1.6,
               }}>
                 Veuillez{' '}
-                <a href="https://guide.maths-ultime.fr/paiement" style={{ color: '#EC6426', textDecoration: 'none', fontWeight: 700 }}>
+                <a
+                  href="https://guide.maths-ultime.fr/paiement"
+                  style={{ color: '#EC6426', textDecoration: 'underline', fontWeight: 700 }}
+                >
                   obtenir l&apos;accès complet
                 </a>
                 {' '}si vous avez déjà un compte
