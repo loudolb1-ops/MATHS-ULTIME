@@ -93,7 +93,7 @@ export function LeadPopup() {
   // Trigger automatique : 10s + exit intent + beforeunload (fermeture onglet)
   useEffect(() => {
     // Timer 10 secondes
-    const timer = setTimeout(showPopupImmediately, 10000);
+    const timer = setTimeout(showPopupImmediately, 20000);
 
     // Exit intent : souris vers barre d'onglets / bouton fermer
     function handleExitIntent(e: MouseEvent) {
