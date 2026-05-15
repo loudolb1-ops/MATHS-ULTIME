@@ -69,7 +69,7 @@ export default function VideoGratuitePage() {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
     intro: true, omega: true, alpha: false, delta: false, sigma: false,
   });
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
@@ -283,15 +283,13 @@ export default function VideoGratuitePage() {
         boxShadow: '0 2px 12px rgba(42,30,18,0.25)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {/* Burger mobile — caché sur desktop */}
-          {!isDesktop && (
-            <button
-              onClick={() => setSidebarOpen(o => !o)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#fff', display: 'flex' }}
-            >
-              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          )}
+          {/* Burger — visible partout, toglle la sidebar */}
+          <button
+            onClick={() => setSidebarOpen(o => !o)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#fff', display: 'flex' }}
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
 
           <Image
             src="/logo_maths_ultime_detoured.png"
@@ -316,15 +314,15 @@ export default function VideoGratuitePage() {
       {/* ── Corps : sidebar 1/4 + contenu 3/4 ── */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
 
-        {/* Sidebar desktop — 25% */}
-        {isDesktop && (
+        {/* Sidebar desktop — inline, togglable via burger */}
+        {isDesktop && sidebarOpen && (
           <div style={{ width: '25%', minWidth: 240, maxWidth: 340, flexShrink: 0, height: '100%' }}>
             {sidebar}
           </div>
         )}
 
-        {/* Sidebar mobile overlay */}
-        {sidebarOpen && (
+        {/* Sidebar mobile — overlay */}
+        {!isDesktop && sidebarOpen && (
           <div
             style={{ position: 'absolute', inset: 0, zIndex: 40, display: 'flex' }}
             onClick={() => setSidebarOpen(false)}
@@ -391,7 +389,7 @@ export default function VideoGratuitePage() {
                     Tu veux accéder à toute la formation ?
                   </p>
                   <p style={{ fontFamily: 'var(--font-baloo)', fontWeight: 500, fontSize: 13, color: '#5a4e3e', margin: 0 }}>
-                    Débloque les {LOCKED_COUNT} vidéos restantes du programme complet.
+                    Débloque les {LOCKED_COUNT} vidéos restantes du guide vidéo complet.
                   </p>
                 </div>
                 <a
