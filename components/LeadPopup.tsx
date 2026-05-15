@@ -66,35 +66,54 @@ export function LeadPopup() {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countryRef = useRef<HTMLDivElement>(null);
   const autoTriggered = useRef(false);
+  const popupOpenRef = useRef(false);
 
   // Trigger manuel via événement
   useEffect(() => {
-    const handler = () => setIsOpen(true);
+    const handler = () => { setIsOpen(true); popupOpenRef.current = true; };
     window.addEventListener('mu:open-popup', handler);
     return () => window.removeEventListener('mu:open-popup', handler);
   }, []);
 
-  // Trigger automatique : 10s + exit intent (souris vers barre d'onglets / bouton fermer)
+  // Trigger automatique : 10s + exit intent + beforeunload (fermeture onglet)
   useEffect(() => {
 
     function trigger() {
       if (autoTriggered.current) return;
       autoTriggered.current = true;
+      popupOpenRef.current = true;
       setIsOpen(true);
     }
 
     // Timer 10 secondes
     const timer = setTimeout(trigger, 10000);
 
-    // Exit intent : souris sort par le haut du viewport (vers onglets / bouton X)
+    // Exit intent : souris vers barre d'onglets / bouton fermer
     function handleExitIntent(e: MouseEvent) {
       if (e.clientY < 5) trigger();
     }
     document.addEventListener('mousemove', handleExitIntent);
 
+    // Fermeture d'onglet : ouvre le popup ET bloque avec le dialog natif
+    // Si l'user clique "Rester", il voit le popup ouvert
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      // Ne bloquer que si le popup n'a jamais été montré dans cette session
+      if (popupOpenRef.current) return;
+      // Ouvrir le popup immédiatement (visible si l'user reste)
+      autoTriggered.current = true;
+      popupOpenRef.current = true;
+      setIsOpen(true);
+      // Dialog natif du navigateur — bloque la fermeture
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       clearTimeout(timer);
       document.removeEventListener('mousemove', handleExitIntent);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
