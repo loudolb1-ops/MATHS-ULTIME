@@ -335,7 +335,7 @@ export default function VideoGratuitePage() {
         )}
 
         {/* ── Zone contenu — 75% ── */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 36px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 36px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
           <h1 style={{
             fontFamily: 'var(--font-cinzel)',
@@ -344,12 +344,14 @@ export default function VideoGratuitePage() {
             color: '#1a2d4a',
             marginBottom: 28,
             letterSpacing: '.03em',
+            width: '100%',
+            maxWidth: 860,
           }}>
             Introduction
           </h1>
 
           {selectedChapter && !selectedChapter.locked ? (
-            <div style={{ maxWidth: 860 }}>
+            <div style={{ maxWidth: 860, margin: '0 auto' }}>
               {/* Lecteur */}
               <div style={{
                 position: 'relative',
