@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { Lock, Play, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 
-export const metadata = undefined;
-
 const FREE_VIDEO_URL =
   'https://player.mediadelivery.net/embed/651267/a320fd04-0149-4642-87ee-456a6546e0bf?autoplay=false&loop=false&muted=false&preload=true&responsive=true';
 

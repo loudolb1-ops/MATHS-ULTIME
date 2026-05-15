@@ -77,7 +77,6 @@ export function LeadPopup() {
 
   // Trigger automatique : 10s + exit intent + beforeunload
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) return;
 
     function trigger() {
       if (autoTriggered.current) return;
