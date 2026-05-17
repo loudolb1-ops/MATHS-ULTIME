@@ -481,6 +481,7 @@ export function Hero() {
 
             {/* CTA */}
             <a href={offerConfig.checkoutUrl}
+              onClick={(e) => { e.preventDefault(); window.location.href = offerConfig.checkoutUrl; }}
               className="relative w-full flex items-center justify-center gap-2 overflow-hidden font-black uppercase transition-transform duration-75 hover:translate-y-[2px] hover:translate-x-[2px]"
               style={{ background:`linear-gradient(135deg,${C.orange} 0%,#FF7040 100%)`, color:'#fff', border:`3px solid ${C.ink}`, boxShadow:`5px 5px 0 ${C.ink}, 0 8px 24px rgba(240,80,32,.35)`, padding:'clamp(9px,1.2vw,14px) 18px', fontSize:'clamp(11px,1.55vw,16px)', fontFamily:'var(--font-baloo)' }}>
               <span className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shine pointer-events-none"/>

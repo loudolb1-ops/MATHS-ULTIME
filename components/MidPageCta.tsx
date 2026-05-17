@@ -52,6 +52,7 @@ export function MidPageCta() {
           {/* CTA Button */}
           <motion.a
             href={offerConfig.checkoutUrl}
+            onClick={(e) => { e.preventDefault(); window.location.href = offerConfig.checkoutUrl; }}
             whileHover={{ y: 2, boxShadow: '3px 3px 0 #3d3328, 0 4px 12px rgba(236,100,38,0.2), inset 0 2px 0 rgba(255,255,255,0.2)', transition: { duration: 0.06 } }}
             whileTap={{ y: 3, boxShadow: '1px 1px 0 #3d3328, 0 2px 6px rgba(236,100,38,0.15), inset 0 2px 0 rgba(255,255,255,0.2)', transition: { duration: 0.04 } }}
             className="relative flex items-center justify-center gap-3 overflow-hidden font-black uppercase rounded-xl text-white cursor-pointer mt-4 w-full"

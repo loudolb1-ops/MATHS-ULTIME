@@ -67,7 +67,7 @@ export function GreekCTA({
     <div className={`flex flex-col items-center gap-3 w-full max-w-[min(100%,480px)] ${className}`}>
       <motion.a
         href={scrollTo ? '#' : (href ?? offerConfig.checkoutUrl)}
-        onClick={handleClick}
+        onClick={scrollTo ? handleClick : (e) => { e.preventDefault(); window.location.href = href ?? offerConfig.checkoutUrl; }}
         animate={isGrouped
           ? { y: groupHovered ? 2 : 0, boxShadow: groupHovered
               ? `4px 4px 0 ${shadowCol}, 0 6px 20px rgba(236,100,38,0.25), inset 0 2px 0 rgba(255,255,255,0.2)`
