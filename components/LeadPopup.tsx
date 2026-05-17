@@ -104,6 +104,8 @@ export function LeadPopup() {
     // Fermeture d'onglet : manipulation DOM synchrone + dialog natif
     function handleBeforeUnload(e: BeforeUnloadEvent) {
       if (autoTriggered.current) return;
+      // Ne pas bloquer si l'utilisateur navigue intentionnellement vers le checkout
+      if ((window as any).__checkoutNavigation) return;
       // Rendre le popup visible SYNCHRONIQUEMENT avant que le navigateur
       // suspende l'exécution JS pour afficher le dialog "Quitter ?"
       showPopupImmediately();

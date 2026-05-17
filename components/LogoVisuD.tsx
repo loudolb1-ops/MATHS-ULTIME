@@ -38,7 +38,7 @@ export function LogoVisuD({ size = 120, className = '', clickable = true }: Logo
 
   if (clickable) {
     return (
-      <a href={offerConfig.checkoutUrl} onClick={(e) => { e.preventDefault(); window.location.href = offerConfig.checkoutUrl; }} style={{ display: 'inline-block', cursor: 'pointer' }}>
+      <a href={offerConfig.checkoutUrl} onClick={(e) => { e.preventDefault(); (window as any).__checkoutNavigation = true; window.location.href = offerConfig.checkoutUrl; }} style={{ display: 'inline-block', cursor: 'pointer' }}>
         {content}
       </a>
     );
