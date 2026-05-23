@@ -1,7 +1,7 @@
 /** Source unique : prix, VSL, FAQ, formulations validables avec le client. */
 export const offerConfig = {
   regularPrice: 97,
-  launchPrice: 47,
+  launchPrice: 67,
   discountPercent: 0,
   guaranteeDays: 14,
   /** Affichage hero / trust : éviter d’attribuer une note produit non sourcée */
@@ -13,7 +13,7 @@ export const offerConfig = {
   checkoutUrl: 'https://guide.maths-ultime.fr/paiement' as string,
   workHours: 300,
   /** Deadline du compte à rebours (ISO 8601). Laissez vide pour +48h dynamique. */
-  countdownTarget: '2026-05-23T00:00:00',
+  countdownTarget: '2026-06-06T00:00:00',
   /** Promesse qualifiée (objectif pédagogique, pas garantie de note) */
   promiseQualified:
     'Objectif : viser 15/20 en maths en révisant plus intelligemment (sans tourner en rond pendant des heures).',

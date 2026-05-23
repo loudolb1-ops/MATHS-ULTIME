@@ -404,7 +404,7 @@ export function ParentsMessage() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                   <GreekCTA
                     href="https://guide.maths-ultime.fr/paiement"
-                    label="ACCÉDER — 47€"
+                    label="ACCÉDER — 67€"
                     size="sm"
                     showBadges={false}
                     goldBorder={false}
