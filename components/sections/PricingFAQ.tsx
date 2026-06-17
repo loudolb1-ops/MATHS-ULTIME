@@ -3,55 +3,10 @@
 import Image from 'next/image';
 import { Play, Infinity as InfinityIcon, ShieldCheck, Lock, MessageCircle } from 'lucide-react';
 import { GreekCTA } from '@/components/ui';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { faqItems, offerConfig } from '@/lib/offer';
 import { LogoVisuD } from '@/components/LogoVisuD';
-
-// ─── COUNTDOWN shared hook ───────────────────────────────────────────────────
-function useCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ d: 2, h: 23, m: 59, s: 59 });
-  useEffect(() => {
-    const target = offerConfig.countdownTarget
-      ? new Date(offerConfig.countdownTarget).getTime()
-      : Date.now() + 48 * 60 * 60 * 1000;
-    const tick = () => {
-      const diff = Math.max(0, target - Date.now());
-      setTimeLeft({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return [
-    { val: pad(timeLeft.d), unit: 'j' },
-    { val: pad(timeLeft.h), unit: 'h' },
-    { val: pad(timeLeft.m), unit: 'm' },
-    { val: pad(timeLeft.s), unit: 's' },
-  ];
-}
-
-// Digits only — used inline inside the price card
-function CountdownInner() {
-  const segments = useCountdown();
-  return (
-    <>
-      {segments.map((seg, i) => (
-        <span key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-          {i > 0 && <span style={{ fontFamily: 'var(--font-baloo)', fontSize: 'clamp(12px, 4vw, 16px)', color: '#8a7968', margin: '0 2px' }}>·</span>}
-          <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 900, fontSize: 'clamp(16px, 5vw, 20px)', color: '#2a1e12' }}>{seg.val}</span>
-          <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 'clamp(9px, 2.5vw, 10px)', color: '#6a5e4e' }}>{seg.unit}</span>
-        </span>
-      ))}
-    </>
-  );
-}
 
 // ─── FAQ ────────────────────────────────────────────────────────────────────
 const FAQ_VARIANTS = [
@@ -243,11 +198,6 @@ export function PricingSection() {
                 Paiement Unique
               </h3>
 
-              {/* Prix barré — gros + rouge */}
-              <p style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(22px,2.5vw,32px)', color: '#c0392b', textDecoration: 'line-through', textDecorationColor: '#c0392b', textDecorationThickness: 3, marginBottom: -8, lineHeight: 1.1 }}>
-                {offerConfig.regularPrice}€
-              </p>
-
               {/* Prix principal */}
               <p style={{
                 fontFamily: 'var(--font-baloo)', fontWeight: 900,
@@ -259,21 +209,11 @@ export function PricingSection() {
                 {offerConfig.launchPrice}€
               </p>
 
-              {/* Countdown */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 'clamp(9px, 2.5vw, 11px)', letterSpacing: '.08em', textTransform: 'uppercase', color: '#c0392b', whiteSpace: 'nowrap' }}>
-                  Offre de lancement — expire dans
+              {/* Message evergreen */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 10 }}>
+                <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(12px, 3vw, 15px)', letterSpacing: '.04em', textTransform: 'uppercase', color: '#c0392b', textAlign: 'center', lineHeight: 1.3 }}>
+                  Prends de l&apos;avance sur l&apos;année prochaine&nbsp;!
                 </span>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  background: 'linear-gradient(135deg, #ede5da 0%, #d8ccbc 40%, #e8ddd0 70%, #cfc3b4 100%)',
-                  border: '2.5px solid #8a7968',
-                  borderRadius: 8,
-                  padding: '5px 14px',
-                  boxShadow: '2px 2px 0 #5a4e3e, inset 0 1px 0 rgba(255,255,255,0.45)',
-                }}>
-                  <CountdownInner />
-                </div>
               </div>
 
               {/* Frise */}

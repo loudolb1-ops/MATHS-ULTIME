@@ -65,7 +65,7 @@ export default function CgvPage() {
         </Article>
 
         <Article title="Article 3 – Offre et accès">
-          <P><strong>Prix :</strong> 67 € (paiement unique)</P>
+          <P><strong>Prix :</strong> 97 € (paiement unique)</P>
           <P>Lors de certaines opérations spéciales (notamment en semaine d&apos;ouverture, lorsque cela est précisé), le prix peut être réduit à 47 € (paiement unique).</P>
           <P>L&apos;offre comprend :</P>
           <ul className="list-none space-y-1 mb-3" style={{ paddingLeft: 16 }}>

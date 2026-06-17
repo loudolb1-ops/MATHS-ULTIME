@@ -784,7 +784,7 @@ function Timeline() {
                            ))}
                          </div>
                          <p className="font-montserrat text-[10px] sm:text-[11px] text-[#1a2d4a]/40 tracking-[0.1em] uppercase font-bold">
-                           ACCÈS IMMÉDIAT · OFFRE LANCEMENT
+                           ACCÈS IMMÉDIAT · PAIEMENT UNIQUE
                          </p>
                      </div>
                  </div>

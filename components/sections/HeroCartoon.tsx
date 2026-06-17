@@ -113,95 +113,9 @@ function LeftStelesStack() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// COUNTDOWN MARBRE
-// ════════════════════════════════════════════════════════════════════════════
-function CountdownMarble() {
-  const [timeLeft, setTimeLeft] = useState({ d: 2, h: 23, m: 59, s: 59 });
-
-  useEffect(() => {
-    const target = offerConfig.countdownTarget
-      ? new Date(offerConfig.countdownTarget).getTime()
-      : Date.now() + 48 * 60 * 60 * 1000;
-
-    const tick = () => {
-      const diff = Math.max(0, target - Date.now());
-      setTimeLeft({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const pad = (n: number) => String(n).padStart(2, '0');
-
-  const segments = [
-    { val: pad(timeLeft.d), unit: 'j' },
-    { val: pad(timeLeft.h), unit: 'h' },
-    { val: pad(timeLeft.m), unit: 'm' },
-    { val: pad(timeLeft.s), unit: 's' },
-  ];
-
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      background: 'linear-gradient(135deg, #ede5da 0%, #d8ccbc 40%, #e8ddd0 70%, #cfc3b4 100%)',
-      border: '2.5px solid #8a7968', borderRadius: 10,
-      boxShadow: '3px 3px 0 #5a4e3e, inset 0 1px 0 rgba(255,255,255,0.45)',
-      padding: '7px 18px 9px',
-      gap: 4,
-    }}>
-      <span style={{
-        fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 'clamp(8px, 1vw, 11px)',
-        letterSpacing: '.14em', color: '#c0392b', textTransform: 'uppercase', lineHeight: 1,
-      }}>
-        Offre de lancement — expire dans
-      </span>
-      <div style={{ width: '100%', height: 1, background: 'linear-gradient(90deg, transparent, #8a7968 30%, #8a7968 70%, transparent)', opacity: 0.5 }} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        {segments.map((seg, i) => (
-          <span key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-            {i > 0 && <span style={{ fontFamily: 'var(--font-baloo)', fontSize: '16px', color: '#8a7968', margin: '0 4px' }}>·</span>}
-            <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 900, fontSize: 'clamp(16px, 4.5vw, 20px)', color: '#2a1e12' }}>{seg.val}</span>
-            <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: '10px', color: '#6a5e4e' }}>{seg.unit}</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// COUNTDOWN BADGE — collé au CTA, partage le hover groupé
+// BANDEAU CTA — message evergreen collé au CTA, partage le hover groupé
 // ════════════════════════════════════════════════════════════════════════════
 function CountdownBadge({ hovered }: { hovered?: boolean }) {
-  const [timeLeft, setTimeLeft] = useState({ d: 14, h: 23, m: 59, s: 59 });
-
-  useEffect(() => {
-    const target = offerConfig.countdownTarget
-      ? new Date(offerConfig.countdownTarget).getTime()
-      : Date.now() + 48 * 60 * 60 * 1000;
-
-    const tick = () => {
-      const diff = Math.max(0, target - Date.now());
-      setTimeLeft({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const pad = (n: number) => String(n).padStart(2, '0');
-
   return (
     <motion.div
       animate={{ y: hovered ? 2 : 0 }}
@@ -220,23 +134,9 @@ function CountdownBadge({ hovered }: { hovered?: boolean }) {
         zIndex: 1,
         whiteSpace: 'nowrap',
       }}>
-      <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 'clamp(9px, 1vw, 11px)', letterSpacing: '.08em', textTransform: 'uppercase', color: '#c0392b' }}>
-        L&apos;offre expire dans
+      <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 800, fontSize: 'clamp(9px, 1vw, 12px)', letterSpacing: '.06em', textTransform: 'uppercase', color: '#c0392b' }}>
+        Prends de l&apos;avance sur l&apos;année prochaine&nbsp;!
       </span>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-        {[
-          { val: pad(timeLeft.d), unit: 'j' },
-          { val: pad(timeLeft.h), unit: 'h' },
-          { val: pad(timeLeft.m), unit: 'm' },
-          { val: pad(timeLeft.s), unit: 's' },
-        ].map((seg, i) => (
-          <span key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-            {i > 0 && <span style={{ fontFamily: 'var(--font-baloo)', fontSize: 12, color: '#8a7968', margin: '0 2px' }}>·</span>}
-            <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 900, fontSize: 'clamp(13px, 1.5vw, 16px)', color: '#2a1e12' }}>{seg.val}</span>
-            <span style={{ fontFamily: 'var(--font-baloo)', fontWeight: 700, fontSize: 9, color: '#6a5e4e' }}>{seg.unit}</span>
-          </span>
-        ))}
-      </div>
     </motion.div>
   );
 }
