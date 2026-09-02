@@ -1,7 +1,7 @@
 /** Source unique : prix, VSL, FAQ, formulations validables avec le client. */
 export const offerConfig = {
   regularPrice: 97,
-  launchPrice: 97,
+  launchPrice: 47,
   discountPercent: 0,
   guaranteeDays: 14,
   /** Affichage hero / trust : éviter d’attribuer une note produit non sourcée */
@@ -12,6 +12,8 @@ export const offerConfig = {
   /** CTA secondaire : ancre ou URL de paiement */
   checkoutUrl: 'https://guide.maths-ultime.fr/paiement' as string,
   workHours: 300,
+  /** Deadline du compte à rebours (ISO 8601). Réouverture 7 sept. → 28 sept. 2026 à 00h (3 semaines). */
+  countdownTarget: '2026-09-28T00:00:00',
   /** Promesse qualifiée (objectif pédagogique, pas garantie de note) */
   promiseQualified:
     'Objectif : viser 15/20 en maths en révisant plus intelligemment (sans tourner en rond pendant des heures).',

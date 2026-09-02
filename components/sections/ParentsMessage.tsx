@@ -8,6 +8,7 @@ import { LogoVisuD } from '@/components/LogoVisuD';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { useTapHover } from '@/hooks/useTapHover';
+import { offerConfig } from '@/lib/offer';
 
 function KatexSpan({ latex, style }: { latex: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -404,7 +405,7 @@ export function ParentsMessage() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                   <GreekCTA
                     href="https://guide.maths-ultime.fr/paiement"
-                    label="ACCÉDER — 97€"
+                    label={`ACCÉDER — ${offerConfig.launchPrice}€`}
                     size="sm"
                     showBadges={false}
                     goldBorder={false}
