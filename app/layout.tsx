@@ -1,6 +1,6 @@
 import type {Metadata} from 'next';
 import { Analytics } from '@vercel/analytics/react';
-import { Cinzel, Baloo_2, Montserrat } from 'next/font/google';
+import { Cinzel, Baloo_2, Montserrat, Permanent_Marker } from 'next/font/google';
 import './globals.css'; // Global styles
 
 const cinzel = Cinzel({
@@ -19,6 +19,12 @@ const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
   weight: ['600', '700', '800'],
+});
+
+const marker = Permanent_Marker({
+  subsets: ['latin'],
+  variable: '--font-marker',
+  weight: '400',
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mathsultime.fr';
@@ -51,7 +57,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="fr" className={`${cinzel.variable} ${baloo2.variable} ${montserrat.variable} scroll-smooth`}>
+    <html lang="fr" className={`${cinzel.variable} ${baloo2.variable} ${montserrat.variable} ${marker.variable} scroll-smooth`}>
       <body className="antialiased font-sans" suppressHydrationWarning>
         {children}
         <Analytics />

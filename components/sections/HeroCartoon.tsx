@@ -582,6 +582,15 @@ export function HeroCartoon() {
           }}>
             MATHS ULTIME
           </span>
+          <span aria-hidden style={{
+            fontFamily: 'var(--font-marker)',
+            fontSize: 'clamp(26px, 4.2vw, 46px)',
+            color: '#E31313',
+            lineHeight: 1,
+            transform: 'rotate(-8deg)',
+            display: 'inline-block',
+            textShadow: '1px 1px 0 rgba(0,0,0,0.15)',
+          }}>2.0</span>
           <span style={{
             fontSize: 'clamp(14px, 2vw, 20px)', lineHeight: 1,
             color: '#FFE234',
